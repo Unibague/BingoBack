@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bingo.unibague.demo.models.BingoCard;
-import bingo.unibague.demo.services.CartonService;
+import bingo.unibague.demo.services.BingoCardService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -21,39 +21,30 @@ import bingo.unibague.demo.services.CartonService;
 public class CardBoardController {
 
     @Autowired
-    private CartonService cartonService;
+    private BingoCardService cardService;
 
-    /**
-     * Generar cartones para un juego
-     * @param cantidad número de cartones a generar (por defecto 10)
-     * @return lista de cartones generados
-     */
     @PostMapping("/generar")
     public ResponseEntity<List<BingoCard>> generarCartones(@RequestParam(defaultValue = "10") int cantidad) {
-        List<BingoCard> cartones = cartonService.generarCartones(cantidad);
+        // Para juego offline, generar cartones independientes
+        List<BingoCard> cartones = new java.util.ArrayList<>();
+        for (int i = 0; i < cantidad; i++) {
+            BingoCard card = cardService.generateSingleCard();
+            card.setNumeroCarton(i + 1);
+            cartones.add(card);
+        }
         return ResponseEntity.ok(cartones);
     }
 
-    /**
-     * Obtener un cartón específico
-     * @param cartonId ID del cartón
-     * @return cartón solicitado
-     */
     @GetMapping("/{cartonId}")
     public ResponseEntity<BingoCard> obtenerCarton(@PathVariable Long cartonId) {
-        return cartonService.obtenerCarton(cartonId)
+        return cardService.getCardById(cartonId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Obtener todos los cartones de un juego
-     * @param juegoId ID del juego
-     * @return lista de cartones del juego
-     */
     @GetMapping("/juego/{juegoId}")
     public ResponseEntity<List<BingoCard>> obtenerCartonesPorJuego(@PathVariable Long juegoId) {
-        List<BingoCard> cartones = cartonService.obtenerCartonesPorJuego(juegoId);
+        List<BingoCard> cartones = cardService.getCardsByGame(juegoId);
         return ResponseEntity.ok(cartones);
     }
 }

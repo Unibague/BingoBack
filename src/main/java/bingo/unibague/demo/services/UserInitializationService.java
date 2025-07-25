@@ -70,7 +70,7 @@ public class UserInitializationService implements CommandLineRunner {
         try {
             User admin = new User(
                 "admin", // Cambiado a "admin" para ser más claro
-                passwordEncoder.encode("js251120051"),
+                passwordEncoder.encode("js25112005"),
                 "jonatanan@example.com",
                 Arrays.asList("ROLE_ADMIN")
             );
