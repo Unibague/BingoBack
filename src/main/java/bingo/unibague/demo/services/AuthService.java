@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import bingo.unibague.demo.Security.UserDetailsImpl;
 import bingo.unibague.demo.Security.jwt.JwtUtils;
@@ -34,6 +36,9 @@ public class AuthService {
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private EmailService emailService;
 
     /**
      * Autentica un usuario y genera un token JWT
@@ -69,6 +74,7 @@ public class AuthService {
      * @param signUpRequest datos del nuevo usuario
      * @return mensaje de respuesta
      */
+    @Transactional
     public MessageResponse registerUser(SignupRequest signUpRequest) {
         // Verificar si el nombre de usuario ya existe
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -81,14 +87,27 @@ public class AuthService {
         }
 
         // Crear nueva cuenta de usuario
+        String rawPassword = signUpRequest.getPassword();
+        if (rawPassword == null || rawPassword.isBlank()) {
+            throw new RuntimeException("Error: La contraseña es obligatoria. El administrador debe especificar una contraseña.");
+        }
+        
         User user = new User(
             signUpRequest.getUsername(),
-            encoder.encode(signUpRequest.getPassword()),
+            encoder.encode(rawPassword),
             signUpRequest.getEmail(),
             signUpRequest.getRoles() != null ? signUpRequest.getRoles() : List.of("ROLE_USER")
         );
-
         userRepository.save(user);
+
+        // Enviar credenciales por correo
+        try {
+            emailService.sendCredentials(user.getEmail(), user.getUsername(), rawPassword);
+        } catch (MailException e) {
+            // Log del error pero no detiene el registro
+            System.err.println("Error enviando correo a " + user.getEmail() + ": " + e.getMessage());
+            // Podrías usar un logger aquí: logger.error("Error enviando correo", e);
+        }
 
         return new MessageResponse("¡Usuario registrado exitosamente!");
     }

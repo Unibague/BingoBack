@@ -32,6 +32,9 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
+    @Column(name = "max_cartones")
+    private Integer maxCartones = 1; // Por defecto 1
+
     // Constructores
     public User() {
     }
@@ -82,5 +85,14 @@ public class User {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    // Getter y Setter para maxCartones
+    public Integer getMaxCartones() {
+        return maxCartones;
+    }
+
+    public void setMaxCartones(Integer maxCartones) {
+        this.maxCartones = maxCartones;
     }
 }
