@@ -73,7 +73,7 @@ public class CartonController {
      * Activa un cartón específico
      */
     @PutMapping("/{cartonId}/activar")
-    @PreAuthorize("hasRole('ADMIN') or @cartonService.getCartonByNumero(#cartonId).map(c -> c.user.id).orElse(-1L) == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN') or @cartonService.getUserIdByCartonId(#cartonId) == authentication.principal.id")
     public ResponseEntity<?> activarCarton(@PathVariable Long cartonId) {
         try {
             if (cartonService.activarCarton(cartonId)) {
@@ -90,7 +90,7 @@ public class CartonController {
      * Desactiva un cartón específico
      */
     @PutMapping("/{cartonId}/desactivar")
-    @PreAuthorize("hasRole('ADMIN') or @cartonService.getCartonByNumero(#cartonId).map(c -> c.user.id).orElse(-1L) == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN') or @cartonService.getUserIdByCartonId(#cartonId) == authentication.principal.id")
     public ResponseEntity<?> desactivarCarton(@PathVariable Long cartonId) {
         if (cartonService.desactivarCarton(cartonId)) {
             return ResponseEntity.ok(new MessageResponse("Cartón desactivado exitosamente"));
@@ -103,7 +103,7 @@ public class CartonController {
      * Cambia el estado de un cartón (activo <-> inactivo)
      */
     @PutMapping("/{cartonId}/toggle")
-    @PreAuthorize("hasRole('ADMIN') or @cartonService.getCartonByNumero(#cartonId).map(c -> c.user.id).orElse(-1L) == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN') or @cartonService.getUserIdByCartonId(#cartonId) == authentication.principal.id")
     public ResponseEntity<?> toggleEstadoCarton(@PathVariable Long cartonId) {
         try {
             if (cartonService.toggleEstadoCarton(cartonId)) {

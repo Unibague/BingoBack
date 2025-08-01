@@ -49,7 +49,7 @@ public class UserController {
      * Obtiene un usuario específico por ID
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userService.getUserById(#id).map(u -> u.username).orElse('') == authentication.name")
+    @PreAuthorize("hasRole('ADMIN') or @userService.userHasUsername(#id, authentication.name)")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         return userService.getUserById(id)
                 .map(user -> ResponseEntity.ok(user))

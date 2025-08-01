@@ -152,6 +152,18 @@ public class UserService {
         return getUsersByRole("ROLE_USER");
     }
 
+    /**
+     * Verifica si un usuario con el ID dado tiene el username especificado
+     * @param userId ID del usuario
+     * @param username nombre de usuario a verificar
+     * @return true si el usuario existe y tiene ese username
+     */
+    public boolean userHasUsername(Long userId, String username) {
+        return userRepository.findById(userId)
+                .map(user -> user.getUsername().equals(username))
+                .orElse(false);
+    }
+
     @Autowired
 private PasswordEncoder passwordEncoder;
 

@@ -121,7 +121,7 @@ public class AuthService {
                 : savedUser.getEmail();
             
             System.out.println("Enviando credenciales a: " + emailDestino);
-            emailService.sendCredentials(emailDestino, savedUser.getUsername(), rawPassword);
+            emailService.sendCredentials(emailDestino, savedUser.getUsername(), rawPassword, savedUser.getEmail());
             System.out.println("Credenciales enviadas exitosamente a: " + emailDestino);
             
         } catch (MailException e) {

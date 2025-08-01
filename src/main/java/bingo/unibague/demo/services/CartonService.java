@@ -183,6 +183,26 @@ public class CartonService {
     }
 
     /**
+     * Obtiene un cartón por su ID
+     * @param cartonId ID del cartón
+     * @return Cartón opcional
+     */
+    public Optional<Carton> getCartonById(Long cartonId) {
+        return cartonRepository.findById(cartonId);
+    }
+
+    /**
+     * Obtiene el ID del usuario propietario de un cartón
+     * @param cartonId ID del cartón
+     * @return ID del usuario o null si no se encuentra el cartón
+     */
+    public Long getUserIdByCartonId(Long cartonId) {
+        return cartonRepository.findById(cartonId)
+                .map(carton -> carton.getUser().getId())
+                .orElse(null);
+    }
+
+    /**
      * Elimina un cartón
      * @param cartonId ID del cartón
      * @return true si se eliminó correctamente

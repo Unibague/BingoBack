@@ -42,7 +42,7 @@ public class EmailServiceController {
         logger.debug("EmailController - Enviando credenciales a: {}", request.getTo());
         
         try {
-            emailService.sendCredentials(request.getTo(), request.getUsername(), request.getPassword());
+            emailService.sendCredentials(request.getTo(), request.getUsername(), request.getPassword(), request.getTo());
             logger.debug("EmailController - Email enviado exitosamente a: {}", request.getTo());
             return ResponseEntity.ok("Correo de credenciales enviado correctamente");
         } catch (Exception e) {
