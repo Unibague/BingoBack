@@ -3,6 +3,8 @@ package bingo.unibague.demo.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +26,8 @@ import bingo.unibague.demo.repository.UserRepository;
 
 @Service
 public class AuthService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -48,8 +52,12 @@ public class AuthService {
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
         // Intentar autenticar al usuario
         try {
+            // Usar directamente el email para autenticación
+            String loginIdentifier = loginRequest.getEmail();
+            logger.debug("AuthService - Intento de login con: {}", loginIdentifier);
+            
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(loginIdentifier, loginRequest.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
@@ -92,20 +100,34 @@ public class AuthService {
             throw new RuntimeException("Error: La contraseña es obligatoria. El administrador debe especificar una contraseña.");
         }
         
+        // Crear nueva cuenta de usuario con existEmail
         User user = new User(
             signUpRequest.getUsername(),
             encoder.encode(rawPassword),
             signUpRequest.getEmail(),
+            signUpRequest.getExistEmail(), // Guardar el email donde enviar credenciales
             signUpRequest.getRoles() != null ? signUpRequest.getRoles() : List.of("ROLE_USER")
         );
-        userRepository.save(user);
+        
+        // Guardar usuario en la base de datos PRIMERO
+        User savedUser = userRepository.save(user);
+        System.out.println("Usuario guardado en BD con ID: " + savedUser.getId());
 
-        // Enviar credenciales por correo
+        // DESPUÉS de guardar, enviar credenciales por correo
         try {
-            emailService.sendCredentials(user.getEmail(), user.getUsername(), rawPassword);
+            // Usar existEmail si está disponible, sino usar el email del usuario
+            String emailDestino = savedUser.getExistEmail() != null && !savedUser.getExistEmail().isBlank() 
+                ? savedUser.getExistEmail() 
+                : savedUser.getEmail();
+            
+            System.out.println("Enviando credenciales a: " + emailDestino);
+            emailService.sendCredentials(emailDestino, savedUser.getUsername(), rawPassword);
+            System.out.println("Credenciales enviadas exitosamente a: " + emailDestino);
+            
         } catch (MailException e) {
-            // Log del error pero no detiene el registro
-            System.err.println("Error enviando correo a " + user.getEmail() + ": " + e.getMessage());
+            // Log del error pero no detiene el registro ya que el usuario ya está guardado
+            System.err.println("Error enviando correo: " + e.getMessage());
+            e.printStackTrace();
             // Podrías usar un logger aquí: logger.error("Error enviando correo", e);
         }
 

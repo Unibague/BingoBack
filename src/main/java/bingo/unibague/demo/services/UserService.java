@@ -4,17 +4,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import bingo.unibague.demo.dto.UserDTO;
 import bingo.unibague.demo.models.Carton.EstadoCarton;
 import bingo.unibague.demo.models.autentication.User;
+import bingo.unibague.demo.payload.request.CreateUserRequest;
 import bingo.unibague.demo.repository.CartonRepository;
 import bingo.unibague.demo.repository.UserRepository;
 
 @Service
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -119,6 +125,7 @@ public class UserService {
             user.getId(),
             user.getUsername(),
             user.getEmail(),
+            user.getExistEmail(),
             user.getRoles(),
             user.getMaxCartones(),
             cartonesActivos
@@ -144,4 +151,80 @@ public class UserService {
     public List<UserDTO> getPlayers() {
         return getUsersByRole("ROLE_USER");
     }
+
+    @Autowired
+private PasswordEncoder passwordEncoder;
+
+    @Autowired
+private EmailService emailService;
+
+public UserDTO createUser(CreateUserRequest request) {
+    // Limpiar username y email de números aleatorios
+    String cleanUsername = cleanIdentifier(request.getUsername());
+    String cleanEmail = cleanIdentifier(request.getEmail());
+    String cleanExistEmail = cleanIdentifier(request.getExistEmail());
+    
+    logger.debug("UserService - Creando usuario con datos limpios: username={}, email={}, existEmail={}, role={}", 
+                cleanUsername, cleanEmail, cleanExistEmail, request.getRole());
+    logger.debug("UserService - Password presente: {}", request.getPassword() != null ? "Sí" : "No");
+    logger.debug("UserService - MaxCartones: {}", request.getMaxCartones());
+    
+    if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+        logger.error("UserService - Password es null o vacío");
+        throw new IllegalArgumentException("La contraseña no puede ser null o vacía");
+    }
+    
+    // Verificar si ya existe un usuario con el mismo username o email (usando datos limpios)
+    if (userRepository.findByUsername(cleanUsername).isPresent()) {
+        logger.error("UserService - Usuario ya existe con username: {}", cleanUsername);
+        throw new IllegalArgumentException("Ya existe un usuario con ese nombre de usuario");
+    }
+    
+    if (userRepository.findByEmail(cleanEmail).isPresent()) {
+        logger.error("UserService - Usuario ya existe con email: {}", cleanEmail);
+        throw new IllegalArgumentException("Ya existe un usuario con ese email");
+    }
+    
+    User user = new User();
+    user.setUsername(cleanUsername);
+    user.setEmail(cleanEmail);
+    user.setExistEmail(cleanExistEmail);
+    user.setPassword(passwordEncoder.encode(request.getPassword()));
+    user.setMaxCartones(request.getMaxCartones());
+    user.setRoles(List.of("ROLE_" + request.getRole()));
+    
+    logger.debug("UserService - Usuario preparado para guardar");
+    User savedUser = userRepository.save(user);
+    logger.debug("UserService - Usuario guardado con ID: {}", savedUser.getId());
+    
+    // Intentar enviar email con credenciales al email especificado
+    try {
+        logger.info("UserService - Intentando enviar email a: {}", cleanExistEmail);
+        emailService.sendCredentials(cleanExistEmail, cleanUsername, request.getPassword(), cleanEmail);
+        logger.info("UserService - Email enviado exitosamente");
+    } catch (Exception e) {
+        logger.error("UserService - Error enviando email: {}", e.getMessage(), e);
+    }
+    
+    return convertToDTO(savedUser);
+}
+
+/**
+ * Limpia identificadores removiendo números aleatorios agregados por el frontend
+ * Ejemplo: jonatan2_1753999119022@example.com -> jonatan2@example.com
+ */
+private String cleanIdentifier(String identifier) {
+    if (identifier == null) return null;
+    
+    // Remover patrón _números al final del nombre (antes del @)
+    if (identifier.contains("@")) {
+        // Es un email
+        String[] parts = identifier.split("@");
+        String localPart = parts[0].replaceAll("_\\d+$", ""); // Remover _números al final
+        return localPart + "@" + parts[1];
+    } else {
+        // Es un username
+        return identifier.replaceAll("_\\d+$", ""); // Remover _números al final
+    }
+}
 }

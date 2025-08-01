@@ -6,6 +6,7 @@ public class UserDTO {
     private Long id;
     private String username;
     private String email;
+    private String existEmail;
     private List<String> roles;
     private Integer maxCartones;
     private Integer cartonesActivos;
@@ -14,19 +15,21 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(Long id, String username, String email, List<String> roles, Integer maxCartones) {
+    public UserDTO(Long id, String username, String email, String existEmail, List<String> roles, Integer maxCartones) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.existEmail = existEmail;
         this.roles = roles;
         this.maxCartones = maxCartones;
         this.cartonesActivos = 0; // Por defecto 0
     }
 
-    public UserDTO(Long id, String username, String email, List<String> roles, Integer maxCartones, Integer cartonesActivos) {
+    public UserDTO(Long id, String username, String email, String existEmail, List<String> roles, Integer maxCartones, Integer cartonesActivos) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.existEmail = existEmail;
         this.roles = roles;
         this.maxCartones = maxCartones;
         this.cartonesActivos = cartonesActivos;
@@ -55,6 +58,14 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getExistEmail() {
+        return existEmail;
+    }
+
+    public void setExistEmail(String existEmail) {
+        this.existEmail = existEmail;
     }
 
     public List<String> getRoles() {

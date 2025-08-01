@@ -38,8 +38,7 @@ public interface CartonRepository extends JpaRepository<Carton, Long> {
     @Query("SELECT COUNT(c) FROM Carton c WHERE c.user.id = :userId AND c.estado = :estado")
     Long countByUserIdAndEstado(@Param("userId") Long userId, @Param("estado") EstadoCarton estado);
     
-    // Contar cartones activos por usuario (método directo)
-    Long countByUserIdAndEstados(Long userId, EstadoCarton estado);
+
     
     // Obtener cartones activos de un usuario
     @Query("SELECT c FROM Carton c WHERE c.user.id = :userId AND c.estado = 'ACTIVO'")

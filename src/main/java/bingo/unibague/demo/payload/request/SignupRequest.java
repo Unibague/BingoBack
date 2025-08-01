@@ -17,6 +17,10 @@ public class SignupRequest {
     @Email
     private String email;
 
+    @Size(max = 50)
+    @Email
+    private String existEmail; // Email donde se envían las credenciales
+
     private List<String> roles;
 
     @NotBlank
@@ -53,5 +57,13 @@ public class SignupRequest {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public String getExistEmail() {
+        return existEmail;
+    }
+
+    public void setExistEmail(String existEmail) {
+        this.existEmail = existEmail;
     }
 }

@@ -29,6 +29,9 @@ public class User {
     @Column(nullable = false)
     private String email;
 
+    @Column(name = "exist_email")
+    private String existEmail; // Email donde se envían las credenciales
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
@@ -43,6 +46,14 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.roles = roles;
+    }
+
+    public User(String username, String password, String email, String existEmail, List<String> roles) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.existEmail = existEmail;
         this.roles = roles;
     }
 
@@ -77,6 +88,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getExistEmail() {
+        return existEmail;
+    }
+
+    public void setExistEmail(String existEmail) {
+        this.existEmail = existEmail;
     }
 
     public List<String> getRoles() {
