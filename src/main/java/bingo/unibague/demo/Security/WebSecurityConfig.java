@@ -69,6 +69,8 @@ public class WebSecurityConfig {
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(auth -> 
           auth.requestMatchers("/api/auth/signin", "/api/auth/signup").permitAll()
+              .requestMatchers("/api/debug/**").permitAll()
+              .requestMatchers("/ws/**").permitAll()
               .requestMatchers("/api/auth/verify").authenticated()
               .requestMatchers("/api-docs/**").permitAll()
               .requestMatchers("/swagger-ui/**").permitAll()
@@ -84,7 +86,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://bingouni2.unibague.edu.co", "http://bingouni2.unibague.edu.co", "http://localhost:8085"));
+        configuration.setAllowedOrigins(List.of("https://bingouni2.unibague.edu.co", "http://bingouni2.unibague.edu.co", "http://localhost:8085", "http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

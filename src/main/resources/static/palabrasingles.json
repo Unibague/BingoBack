@@ -1,0 +1,101 @@
+{
+  "book": "American Empower Elementary A2",
+  "total_modules": 6,
+  "modules": [
+    {
+      "module": 1,
+      "topic": "People and Personal Information",
+      "words": [
+        "name", "surname", "nickname", "age", "country", "city", "address",
+        "phone number", "email", "student", "teacher", "classmate", "friend",
+        "best friend", "family", "parents", "children", "mother", "father",
+        "brother", "sister", "son", "daughter", "uncle", "aunt", "cousin",
+        "grandmother", "grandfather", "husband", "wife", "boyfriend",
+        "girlfriend", "neighbor", "married", "single", "divorced", "tall",
+        "short", "young", "old", "beautiful", "handsome", "happy", "sad",
+        "angry", "tired", "funny", "serious", "kind", "lazy", "active",
+        "friendly", "shy", "quiet", "smart", "polite", "rude", "interesting",
+        "boring"
+      ]
+    },
+    {
+      "module": 2,
+      "topic": "Daily Routines and Activities",
+      "words": [
+        "wake up", "get up", "take a shower", "brush teeth", "get dressed",
+        "have breakfast", "go to school", "go to work", "start work",
+        "finish work", "study", "read", "write", "listen", "speak",
+        "practice", "learn", "eat lunch", "cook dinner", "make dinner",
+        "watch TV", "watch a movie", "play soccer", "play video games",
+        "exercise", "run", "walk", "sleep", "clean", "wash dishes",
+        "do homework", "do housework", "drive", "ride a bike", "shopping",
+        "go shopping", "relax", "travel", "dance", "sing", "swim", "draw",
+        "paint", "use computer", "take photos", "meet friends", "call",
+        "text", "send a message", "check email", "listen to music",
+        "go out", "stay home"
+      ]
+    },
+    {
+      "module": 3,
+      "topic": "Food and Drinks",
+      "words": [
+        "apple", "banana", "orange", "grape", "strawberry", "lemon",
+        "pineapple", "bread", "rice", "pasta", "pizza", "hamburger",
+        "sandwich", "salad", "soup", "chicken", "fish", "meat", "beef",
+        "pork", "egg", "cheese", "butter", "milk", "yogurt", "coffee",
+        "tea", "juice", "water", "soda", "breakfast", "lunch", "dinner",
+        "snack", "restaurant", "cafe", "menu", "waiter", "waitress",
+        "bill", "delicious", "spicy", "sweet", "salty", "healthy",
+        "unhealthy", "hungry", "thirsty", "full", "vegetables", "fruit",
+        "potato", "tomato", "onion", "carrot", "chocolate", "cake",
+        "ice cream"
+      ]
+    },
+    {
+      "module": 4,
+      "topic": "Places and Transportation",
+      "words": [
+        "airport", "station", "bus station", "train station", "hotel",
+        "bank", "hospital", "school", "university", "supermarket", "market",
+        "park", "museum", "cinema", "theater", "restaurant", "cafe",
+        "library", "pharmacy", "store", "shopping mall", "post office",
+        "police station", "bus", "train", "plane", "taxi", "bicycle",
+        "motorcycle", "car", "subway", "boat", "street", "avenue",
+        "bridge", "traffic", "ticket", "travel", "vacation", "trip",
+        "map", "passport", "luggage", "suitcase", "tourist", "guide",
+        "downtown", "corner", "left", "right", "straight ahead", "near",
+        "far", "next to", "between", "behind", "in front of"
+      ]
+    },
+    {
+      "module": 5,
+      "topic": "Weather and Nature",
+      "words": [
+        "sunny", "cloudy", "rainy", "stormy", "windy", "foggy", "snowy",
+        "hot", "cold", "warm", "cool", "freezing", "snow", "rain", "storm",
+        "wind", "sky", "sun", "moon", "star", "river", "lake", "sea",
+        "ocean", "mountain", "beach", "forest", "tree", "flower", "plant",
+        "animal", "bird", "dog", "cat", "horse", "fish", "cow", "sheep",
+        "rabbit", "summer", "winter", "spring", "autumn", "fall",
+        "weather", "temperature", "season", "nature", "island", "desert",
+        "countryside", "grass", "cloud", "rainbow"
+      ]
+    },
+    {
+      "module": 6,
+      "topic": "Jobs and Technology",
+      "words": [
+        "doctor", "nurse", "engineer", "programmer", "designer",
+        "police officer", "firefighter", "chef", "driver", "manager",
+        "secretary", "assistant", "receptionist", "salesperson", "waiter",
+        "waitress", "teacher", "student", "farmer", "mechanic", "artist",
+        "musician", "actor", "office", "company", "factory", "computer",
+        "laptop", "internet", "website", "application", "app", "keyboard",
+        "screen", "mouse", "mobile phone", "tablet", "camera", "printer",
+        "email", "password", "username", "online", "offline", "download",
+        "upload", "technology", "robot", "file", "folder", "document",
+        "message", "video call", "link", "search", "click", "save"
+      ]
+    }
+  ]
+}

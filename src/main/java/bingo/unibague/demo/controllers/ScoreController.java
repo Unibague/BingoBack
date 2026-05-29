@@ -52,7 +52,7 @@ public class ScoreController {
         logger.debug("ScoreController - Obteniendo estadísticas para: {}", userEmail);
         
         EstadisticasResponse estadisticas = puntajeService.obtenerEstadisticasUsuario(userEmail);
-        logger.debug("ScoreController - Estadísticas obtenidas: juegosJugados={}, juegosGanados={}, puntosTotales={}", 
+        logger.debug("ScoreController - Estadísticas obtenidas: juegoslocalJugados={}, juegosGanados={}, puntosTotales={}", 
                     estadisticas.getJuegosJugados(), estadisticas.getJuegosGanados(), estadisticas.getPuntosTotales());
         
         return ResponseEntity.ok(estadisticas);
