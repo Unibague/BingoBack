@@ -29,8 +29,14 @@ public class User {
     @Column(nullable = false)
     private String email;
 
+    @Column(name = "exist_email")
+    private String existEmail; // Email donde se envían las credenciales
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
+
+    @Column(name = "max_cartones")
+    private Integer maxCartones = 1; // Por defecto 1
 
     // Constructores
     public User() {
@@ -40,6 +46,14 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.roles = roles;
+    }
+
+    public User(String username, String password, String email, String existEmail, List<String> roles) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.existEmail = existEmail;
         this.roles = roles;
     }
 
@@ -76,11 +90,28 @@ public class User {
         this.email = email;
     }
 
+    public String getExistEmail() {
+        return existEmail;
+    }
+
+    public void setExistEmail(String existEmail) {
+        this.existEmail = existEmail;
+    }
+
     public List<String> getRoles() {
         return roles;
     }
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    // Getter y Setter para maxCartones
+    public Integer getMaxCartones() {
+        return maxCartones;
+    }
+
+    public void setMaxCartones(Integer maxCartones) {
+        this.maxCartones = maxCartones;
     }
 }

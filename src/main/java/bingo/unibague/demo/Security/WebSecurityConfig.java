@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -62,12 +63,15 @@ public class WebSecurityConfig {
   @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-      .cors(cors -> cors.configure(http)) // Using Lambda DSL for cors
+      .cors(Customizer.withDefaults()) // Using Lambda DSL for cors
       .csrf(csrf -> csrf.disable())
       .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(auth -> 
-          auth.requestMatchers("/api/auth/**").permitAll()
+          auth.requestMatchers("/api/auth/signin", "/api/auth/signup").permitAll()
+              .requestMatchers("/api/debug/**").permitAll()
+              .requestMatchers("/ws/**").permitAll()
+              .requestMatchers("/api/auth/verify").authenticated()
               .requestMatchers("/api-docs/**").permitAll()
               .requestMatchers("/swagger-ui/**").permitAll()
               .requestMatchers("/swagger-ui.html").permitAll()
@@ -82,7 +86,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("https://bingouni2.unibague.edu.co", "http://bingouni2.unibague.edu.co", "http://localhost:8085", "http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

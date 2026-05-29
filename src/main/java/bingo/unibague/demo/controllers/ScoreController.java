@@ -2,6 +2,8 @@ package bingo.unibague.demo.controllers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,8 @@ import bingo.unibague.demo.services.PuntajeService;
 @RestController
 @RequestMapping("/api/puntajes")
 public class ScoreController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ScoreController.class);
 
     @Autowired
     private PuntajeService puntajeService;
@@ -45,7 +49,12 @@ public class ScoreController {
     @GetMapping("/mis-estadisticas")
     public ResponseEntity<EstadisticasResponse> obtenerMisEstadisticas(Authentication authentication) {
         String userEmail = authentication.getName();
+        logger.debug("ScoreController - Obteniendo estadísticas para: {}", userEmail);
+        
         EstadisticasResponse estadisticas = puntajeService.obtenerEstadisticasUsuario(userEmail);
+        logger.debug("ScoreController - Estadísticas obtenidas: juegoslocalJugados={}, juegosGanados={}, puntosTotales={}", 
+                    estadisticas.getJuegosJugados(), estadisticas.getJuegosGanados(), estadisticas.getPuntosTotales());
+        
         return ResponseEntity.ok(estadisticas);
     }
 
